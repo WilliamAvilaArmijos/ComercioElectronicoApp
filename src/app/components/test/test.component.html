@@ -1,0 +1,20 @@
+<!-- <div>
+    <input type="text" [value]="inputName" (keyup)="actualizarInputName($event)">
+    <button (click)="agregarNombre()">Agregar Nombre</button>
+</div>
+
+<p (click)="onNombreClic()">Hola {{nombre}} {{apellido}}</p>
+ -->
+
+<!-- <ul>
+    <li class="list-unstyled" *ngFor="let item of brands">
+        {{item.product}} - {{item.price}}
+    </li>
+</ul> -->
+
+<div *ngIf="listaNombres.length<5">
+    <input type="text" [(ngModel)]="inputName">
+    <button (click)="agregarNombre()">Agregar Nombre</button>
+</div>
+
+<p *ngFor="let item of listaNombres">Hola {{item}}</p>

@@ -1,0 +1,107 @@
+<div class="card " style="width: 40rem; text-align: center; margin: 0px auto;">
+  <button style="right: 0; position: absolute;" (click)="createBrand(contentcreate)" type="button" class="btn btn-primary">+ Agregar</button>
+  <div class="card-header">
+    Marcas
+  </div>
+
+  <div class="card-body">
+    <ng-container *ngIf="brands.length > 0 else noData">
+      <table>
+        <tr>
+          <th style="width: 30%;">Código</th>
+          <th style="width: 40%;">Descripción</th>
+          <th>Acciones</th>
+        </tr>
+        <tr *ngFor="let brand of brands">
+          <td>{{brand.code}}</td>
+          <td>{{brand.description}}</td>
+          <td>
+            <button type="button" class="btn btn-success" (click)="editBrand(brand.code, content)">Editar</button>
+            <button type="button" class="btn btn-danger" (click)="deleted(brand.code,content)">Eliminar</button>
+          </td>
+        </tr>
+      </table>
+    </ng-container>
+    
+  </div>
+</div>
+
+<ng-template #noData>No existen datos</ng-template>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Editar Marca</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    
+
+    <form id="brandForm" [formGroup]="formulario" (ngSubmit)="updateBrand(content)">
+      <div class="form-group">
+          <label for="code">Código:</label>
+          <input type="text" formControlName="code" id="code" class="form-control"/>
+          <div *ngIf="formulario.controls['code'].invalid && (formulario.controls['code'].dirty || formulario.controls['code'].touched)">
+              <small class="text-danger" *ngIf="formulario.controls['code'].errors?.['required']">
+                  El campo codigo es requerido
+              </small>
+              <small class="text-danger" *ngIf="formulario.controls['code'].errors?.['maxlength']">
+                  Longitud máxima: {{formulario.controls['code'].errors?.['maxlength'].requiredLength}}
+              </small>
+          </div>
+      </div>
+
+      <div class="form-group">
+          <label for="description">Descripción:</label>
+          <input type="text" formControlName="description" id="description" class="form-control"/>
+          <div *ngIf="formulario.controls['description'].invalid && (formulario.controls['description'].dirty || formulario.controls['description'].touched)">
+              <small class="text-danger" *ngIf="formulario.controls['description'].errors?.['required']">
+                  El campo codigo es requerido
+              </small>
+              <small class="text-danger" *ngIf="formulario.controls['description'].errors?.['pattern']">
+                  Solo se aceptan caracteres alfanumericos
+              </small>
+          </div>
+
+      </div>
+
+      <button class="btn btn-secondary" type="button" (click)="modal.close('Save click')">Cancelar</button>
+      <button class="btn btn-primary" type="submit">Enviar</button>
+  </form>
+
+  </div>
+</ng-template>
+
+
+<ng-template #contentcreate let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Agregar Marca</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    
+    <form (ngSubmit)="onSubmit(userForm)" #userForm="ngForm" novalidate>
+      <div class="form-group">
+          <label for="code">Codigo: </label>
+          <input id="code" type="text" [(ngModel)]="brand.code" name="code" required #code="ngModel" class="form-control">
+          <div *ngIf="code.errors && code.errors?.['required']">
+                  <div [hidden]="code.valid || code.pristine || !submitted"  style="color: red;">
+                  Campo Obligatorio
+              </div>
+          </div>
+      </div>
+      <div class="form-group">
+          <label for="description">Descripcion: </label>
+          <input id="description" type="text" [(ngModel)]="brand.description" name="description" required #description="ngModel" class="form-control">
+          <div *ngIf="description.errors && description.errors?.['required']">
+              <div [hidden]="description.valid || description.pristine || !submitted"  style="color: red;">
+              Campo Obligatorio
+              </div>
+          </div>
+      </div>
+  
+      <button class="btn btn-primary" type="submit">Guardar</button>
+  </form>
+   
+
+  </div>
+</ng-template>

@@ -1,0 +1,167 @@
+<div class="card " style="width: 70rem; text-align: center; margin: 0px auto;">
+    <button style="right: 0; position: absolute;" (click)="create(contentcreate)" type="button" class="btn btn-primary">+ Agregar</button>
+   <div class="card-header">
+     Productos
+   </div>
+ 
+   <div class="card-body">
+     <ng-container *ngIf="products.items.length > 0 else noData">
+       <table>
+         <tr>
+           <th style="width: 30%;">Id</th>
+           <th style="width: 10%;">Nombre</th>
+           <th style="width: 10%;">Descripción</th>
+           <th style="width: 10%;">Precio</th>
+           <th style="width: 10%;">Tipo de Producto</th>
+           <th style="width: 10%;">Marca</th>
+           <th>Acciones</th>
+         </tr>
+         <tr *ngFor="let item of products.items" >
+           <td>{{item.id}}</td>
+           <td>{{item.name}}</td>
+           <td>{{item.description}}</td>
+           <td>{{item.price}}</td>
+           <td>{{item.productType}}</td>
+           <td>{{item.brand}}</td>
+           <td>
+             <button type="button" class="btn btn-success" (click)="editProduct(item.id,content)">Editar</button>
+             <button type="button" class="btn btn-danger" (click)="deleted(item.id,content)">Eliminar</button>
+           </td>
+         </tr>
+       </table>
+     </ng-container>
+     
+   </div>
+ </div>
+ 
+ <ng-template #noData>No existen datos</ng-template>
+
+
+ <ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Editar Productos</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      
+  
+      <form id="brandForm" [formGroup]="formulario" (ngSubmit)="update(content)">
+        <div class="form-group">
+            <label for="id">Código:</label>
+            <input type="text" formControlName="id" id="id" class="form-control"/>
+            <div *ngIf="formulario.controls['id'].invalid && (formulario.controls['id'].dirty || formulario.controls['id'].touched)">
+                <small class="text-danger" *ngIf="formulario.controls['id'].errors?.['required']">
+                    El campo codigo es requerido
+                </small>
+                <small class="text-danger" *ngIf="formulario.controls['id'].errors?.['maxlength']">
+                    Longitud máxima: {{formulario.controls['id'].errors?.['maxlength'].requiredLength}}
+                </small>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="name">Nombre:</label>
+            <input type="text" formControlName="name" id="name" class="form-control"/>
+            <div *ngIf="formulario.controls['name'].invalid && (formulario.controls['name'].dirty || formulario.controls['name'].touched)">
+                <small class="text-danger" *ngIf="formulario.controls['name'].errors?.['required']">
+                    El campo codigo es requerido
+                </small>
+                <small class="text-danger" *ngIf="formulario.controls['name'].errors?.['pattern']">
+                    Solo se aceptan caracteres alfanumericos
+                </small>
+            </div>
+  
+        </div>
+  
+        <div class="form-group">
+            <label for="description">Descripción:</label>
+            <input type="text" formControlName="description" id="description" class="form-control"/>
+            <div *ngIf="formulario.controls['description'].invalid && (formulario.controls['description'].dirty || formulario.controls['description'].touched)">
+                <small class="text-danger" *ngIf="formulario.controls['description'].errors?.['required']">
+                    El campo codigo es requerido
+                </small>
+                <small class="text-danger" *ngIf="formulario.controls['description'].errors?.['pattern']">
+                    Solo se aceptan caracteres alfanumericos
+                </small>
+            </div>
+  
+        </div>
+
+        <div class="form-group">
+            <label for="price">Precio:</label>
+            <input type="text" formControlName="price" id="price" class="form-control"/>
+            <div *ngIf="formulario.controls['price'].invalid && (formulario.controls['price'].dirty || formulario.controls['price'].touched)">
+                <small class="text-danger" *ngIf="formulario.controls['price'].errors?.['required']">
+                    El campo codigo es requerido
+                </small>
+            </div> 
+        </div>
+  
+        <button class="btn btn-secondary" type="button" (click)="modal.close('Save click')">Cancelar</button>
+        <button class="btn btn-primary" type="submit">Enviar</button>
+    </form>
+  
+    </div>
+  </ng-template>
+
+  
+  <ng-template #contentcreate let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Agregar Tipo de Producto</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      
+      <form (ngSubmit)="onSubmit(userForm)" #userForm="ngForm" novalidate>
+        <div class="form-group">
+            <label for="name">Nombre: </label>
+            <input id="name" type="text" [(ngModel)]="product.name" name="name" required #name="ngModel" class="form-control">
+            <div *ngIf="name.errors && name.errors?.['required']">
+                    <div [hidden]="name.valid || name.pristine || !submitted"  style="color: red;">
+                    Campo Obligatorio
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="description">Descripcion: </label>
+            <input id="description" type="text" [(ngModel)]="product.description" name="description" required #description="ngModel" class="form-control">
+            <div *ngIf="description.errors && description.errors?.['required']">
+                <div [hidden]="description.valid || description.pristine || !submitted"  style="color: red;">
+                Campo Obligatorio
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="price">Precio: </label>
+            <input id="price" type="text" [(ngModel)]="product.name" name="price" required #price="ngModel" class="form-control">
+            <div *ngIf="price.errors && price.errors?.['required']">
+                    <div [hidden]="price.valid || price.pristine || !submitted"  style="color: red;">
+                    Campo Obligatorio
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="productTypeId">Id Tipo de Producto: </label>
+            <input id="productTypeId" type="text" [(ngModel)]="product.name" name="productTypeId" required #productTypeId="ngModel" class="form-control">
+            <div *ngIf="productTypeId.errors && productTypeId.errors?.['required']">
+                    <div [hidden]="productTypeId.valid || productTypeId.pristine || !submitted"  style="color: red;">
+                    Campo Obligatorio
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="brandId">Id Marca: </label>
+            <input id="brandId" type="text" [(ngModel)]="product.name" name="brandId" required #brandId="ngModel" class="form-control">
+            <div *ngIf="brandId.errors && brandId.errors?.['required']">
+                    <div [hidden]="brandId.valid || brandId.pristine || !submitted"  style="color: red;">
+                    Campo Obligatorio
+                </div>
+            </div>
+        </div>
+    
+        <button class="btn btn-primary" type="submit">Guardar</button>
+    </form>
+     
+  
+    </div>
+  </ng-template> 
